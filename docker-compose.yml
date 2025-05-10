@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  go-app:
+    container_name: go-app
+    image: go-api-tutorial
+    build: .
+    ports:
+      - "8015:8000"
+    depends_on:
+      - go_db
+      
+  go_db:
+    container_name: go_db
+    image: postgres:12
+    environment:
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5431:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - go_db
+
+volumes:
+  pgdata: {}
